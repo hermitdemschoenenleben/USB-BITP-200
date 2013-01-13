@@ -1,4 +1,4 @@
-OBJ=delib.o orig_delib.o usb_bpg_200.o
+OBJ=delib.o orig.o usb_bpg_200.o
 
 CXXFLAGS := -g -Wall -std=c++11 $(INCLUDEFLAGS)
 LDLIBS := -L. -ldelib -Lorig_delib -lorigdelib

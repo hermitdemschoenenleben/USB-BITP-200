@@ -1,10 +1,10 @@
 #include <algorithm>
 #include <iostream>
 #include "usb_bpg_200.hh"
-#include "orig_delib.hh"
+#include "orig.hh"
 
 usb_bpg_200::usb_bpg_200 (int nr): cfg_reg_(0) {
-  io_ = new orig_delib (USB_BITP_200, nr);
+  io_ = new orig (USB_BITP_200, nr);
 }
 
 void usb_bpg_200::set_cfg_bit (int bit) {

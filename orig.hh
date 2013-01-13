@@ -6,6 +6,7 @@
 class orig: public delib {
   public:
     orig (int id, int nr);
+    virtual ~orig ();
 
   private:
     value_t ping_ (value_t count) override;

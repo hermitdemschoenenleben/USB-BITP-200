@@ -1,6 +1,14 @@
+#include <stdexcept>
 #include "orig.hh"
 
-orig::orig (int id, int nr) { handle_ = DapiOpenModule (id, nr); }
+orig::orig (int id, int nr) { 
+  handle_ = DapiOpenModule (id, nr); 
+
+  if (!handle_) throw std::runtime_error ("module not found");
+
+}
+
+orig::~orig () { DapiCloseModule (handle_); }
 
 delib::value_t orig::ping_ (value_t count) { return DapiPing (handle_, count); }
 

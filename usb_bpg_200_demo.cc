@@ -1,13 +1,13 @@
+#include <stdexcept>
 #include <iostream>
 #include "usb_bpg_200.hh"
 
-int main() {
+int main() try {
   usb_bpg_200 bpg(0);
 
   std::cout << "PING" << std::endl;
   for (delib::value_t i = 0; i < 100; i++) std::cout << ((bpg.ping (i) == i) ? "." : "E");
   std::cout << std::endl;
-
 
   std::cout << "Memory test" << std::endl;
   bpg.memory_test (1024);
@@ -24,7 +24,7 @@ int main() {
 
   std::cout << "Configuring" << std::endl;
   bpg.stop ();
-  bpg.counter (100000);
+  bpg.counter (10);
   bpg.mapping (2, 22);
   bpg.clock_divider (76);
 
@@ -33,9 +33,11 @@ int main() {
   bpg.start ();
   
 
-  std::cout << "Status" << std::endl;
-  std::cout << bpg.status () << std::endl;
+  std::cout << "Status: " << bpg.status () << std::endl;
 
   delete [] buff;
+} catch (std::exception& ex) {
+  std::cout << "exception: " << ex.what() << std::endl;
 }
+
 

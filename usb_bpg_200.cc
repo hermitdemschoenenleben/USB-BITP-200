@@ -2,9 +2,11 @@
 #include <iostream>
 #include "usb_bpg_200.hh"
 #include "orig.hh"
+#include "ftdi_dual.hh"
 
 usb_bpg_200::usb_bpg_200 (int nr): cfg_reg_(0) {
-  io_ = new orig (USB_BITP_200, nr);
+  //io_ = new orig (USB_BITP_200, nr);
+  io_ = new ftdi_dual (USB_BITP_200, 0);
 }
 
 void usb_bpg_200::set_cfg_bit (int bit) {
@@ -67,7 +69,7 @@ void usb_bpg_200::write_ram (void *buff, size_t buffer_length) {
 
   reset_counter ();
 
-  io_->write (0x60, 10, buffer_length / 10, buff, buffer_length);
+  io_->write (0x60, buff, 10, buffer_length / 10);
 }
 
 
@@ -77,7 +79,7 @@ void usb_bpg_200::read_ram (void *buff, size_t buffer_length) {
 
   io_->read (delib::d4, 0x68);
 
-  io_->read (0x60, 10, buffer_length / 10, buff, buffer_length);
+  io_->read (0x60, buff, 10, buffer_length / 10);
 }
 
 void usb_bpg_200::memory_test (size_t memory_lines) {

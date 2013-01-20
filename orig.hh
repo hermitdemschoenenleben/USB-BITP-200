@@ -11,9 +11,9 @@ class orig: public delib {
   private:
     value_t ping_ (value_t count) override;
     void write_ (data_width dw, address_t address, value_t value) override;
-    void write_ (address_t address, address_t adress_depth, address_t increments, void *buff, size_t buff_len) override;
+    void write_ (address_t address, void *matrix, address_t columns, address_t rows) override;
     value_t read_ (data_width dw, address_t address) override;
-    void read_ (address_t address, address_t adress_depth, address_t increments, void *buff, size_t buff_len) override;
+    void read_ (address_t address, void *matrix, address_t columns, address_t rows) override;
 
     unsigned long handle_;
 };

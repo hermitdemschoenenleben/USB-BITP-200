@@ -26,7 +26,7 @@ class ftdi_base: public delib {
 
   protected:
     enum link_type { A, B, other };
-    ftdi_base (int id, int nr = 0, link_type link = B);
+    ftdi_base (int id, int nr, link_type link);
 };
 
 #endif

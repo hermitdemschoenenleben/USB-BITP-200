@@ -29,7 +29,7 @@ ftdi_base::~ftdi_base () {
 }
 
 delib::value_t ftdi_base::ping_ (value_t count) { 
-  value_t data = cmd (oc_ping, count, 0, 0);
+  value_t data = cmd_ (oc_ping, count, 0, 0);
 
   value_t mask = (value_t(1) << (int(d4) * 8)) - 1;
   return data & mask;
@@ -40,14 +40,14 @@ void ftdi_base::write_ (data_width dw, address_t address, value_t value) {
   address_t modifier = ((1 << int(dw)) - 1) << shift;
   value_t data = value << shift;
   
-  cmd (oc_send, address, modifier, data);
+  cmd_ (oc_send, address, modifier, data);
 }
 
 delib::value_t ftdi_base::read_ (data_width dw, address_t address) { 
   address_t shift = address & (8 - int(dw));
   address_t modifier = ((1 << int(dw)) - 1) << shift;
 
-  value_t data = cmd (oc_recv, address, modifier, 0);
+  value_t data = cmd_ (oc_recv, address, modifier, 0);
 
   value_t mask = (value_t(1) << (int(dw) * 8)) - 1;
   return (data >> shift) & mask;
@@ -55,12 +55,12 @@ delib::value_t ftdi_base::read_ (data_width dw, address_t address) {
 
 
 void ftdi_base::write_ (address_t address, void *matrix, address_t columns, address_t rows) {
-  cmd (oc_send_block, address, reinterpret_cast<uint8_t *>(matrix), columns, rows);
+  cmd_ (oc_send_block, address, reinterpret_cast<uint8_t *>(matrix), columns, rows);
 }
 
 
 void ftdi_base::read_ (address_t address, void *matrix, address_t columns, address_t rows) {
-  cmd (oc_recv_block, address, reinterpret_cast<uint8_t *>(matrix), columns, rows);
+  cmd_ (oc_recv_block, address, reinterpret_cast<uint8_t *>(matrix), columns, rows);
 }
 
 void ftdi_base::set_baudrate (int baudrate) {
@@ -77,7 +77,7 @@ void ftdi_base::set_latency_timer (uint8_t latency) {
 }
 
 
-delib::value_t ftdi_base::cmd (opcode cmd, address_t address, address_t modifier, value_t data) {
+delib::value_t ftdi_base::cmd_ (opcode cmd, address_t address, address_t modifier, value_t data) {
   uint8_t job_id = job_id_inc ();
 
   if (cmd != oc_send) data = 0;
@@ -119,7 +119,7 @@ delib::value_t ftdi_base::cmd (opcode cmd, address_t address, address_t modifier
 }
 
 
-void ftdi_base::cmd (opcode cmd, address_t address, uint8_t *matrix, address_t columns, address_t rows) {
+void ftdi_base::cmd_ (opcode cmd, address_t address, uint8_t *matrix, address_t columns, address_t rows) {
   uint8_t job_id = job_id_inc ();
 
   std::vector<uint8_t> payload(2 * (columns + 1) * rows + 20, 0);

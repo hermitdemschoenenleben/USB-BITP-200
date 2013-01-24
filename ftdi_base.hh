@@ -1,7 +1,6 @@
 #ifndef FTDI_BASE_H
 #define FTDI_BASE_H
 #include "delib.hh"
-#include <memory>
 #include <ftdi.h>
 
 class ftdi_base: public delib {
@@ -19,8 +18,8 @@ class ftdi_base: public delib {
     value_t read_ (data_width dw, address_t address) override;
     void read_ (address_t address, void *matrix, address_t columns, address_t rows) override;
 
-    value_t cmd (opcode cmd, address_t address, address_t modifier, value_t data);
-    void cmd (opcode cmd, address_t address, uint8_t *matrix, address_t columns, address_t rows);
+    value_t cmd_ (opcode cmd, address_t address, address_t modifier, value_t data);
+    void cmd_ (opcode cmd, address_t address, uint8_t *matrix, address_t columns, address_t rows);
 
     ftdi_context handle_;
 

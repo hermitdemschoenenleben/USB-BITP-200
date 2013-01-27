@@ -6,6 +6,7 @@
 class ftdi_dual: public ftdi_base {
   public:
     ftdi_dual (int id, int nr = 0): ftdi_base(id, nr, B) {}
+    virtual ~ftdi_dual () {}
 };
 
 #endif

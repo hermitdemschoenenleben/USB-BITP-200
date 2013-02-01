@@ -33,6 +33,6 @@ class usb_bpg_200 {
     void flip_10_cfg_bit (int bit);
 
     delib::value_t cfg_reg_;
-    delib *io_;
+    delib::base *io_;
 };
 #endif

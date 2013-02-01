@@ -1,8 +1,12 @@
 #include <algorithm>
 #include <iostream>
 #include "usb_bpg_200.hh"
+#if ORIG_PRESENT
 #include "orig.hh"
+#endif
 #include "ftdi_dual.hh"
+
+using namespace delib;
 
 usb_bpg_200::usb_bpg_200 (int nr): cfg_reg_(0) {
   //io_ = new orig (USB_BITP_200, nr);

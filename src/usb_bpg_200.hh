@@ -1,6 +1,6 @@
 #ifndef USB_BPG_200_H_
 #define USB_BPG_200_H_
-#include <stddef.h>
+#include <memory>
 #include "delib.hh"
 
 class usb_bpg_200 {
@@ -13,8 +13,8 @@ class usb_bpg_200 {
     void stop ();
     void pc_mode ();
 
-    void write_ram (void *buff, size_t buffer_length);
-    void read_ram (void *buff, size_t buffer_length);
+    void write_ram (delib::matrix_t buff, size_t buffer_length);
+    void read_ram (delib::matrix_t buff, size_t buffer_length);
     void memory_test (size_t memory_lines);
 
     void reset_counter ();
@@ -33,6 +33,6 @@ class usb_bpg_200 {
     void flip_10_cfg_bit (int bit);
 
     delib::value_t cfg_reg_;
-    delib::base *io_;
+    std::unique_ptr<delib::base> io_;
 };
 #endif

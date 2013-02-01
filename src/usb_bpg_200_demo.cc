@@ -15,7 +15,7 @@ int main() try {
 
   std::cout << "Write pattern" << std::endl;
   int memory_lines = 100;
-  uint8_t *buff = new uint8_t[memory_lines * 5]; 
+  delib::matrix_t buff(memory_lines * 5);
 
   for (int i = 0; i < memory_lines; i++)
     for (int j = 0; j < 5; j++) buff[i * 5 + j] = (i & 0xff) + j;
@@ -34,8 +34,6 @@ int main() try {
   
 
   std::cout << "Status: " << bpg.status () << std::endl;
-
-  delete [] buff;
 } catch (std::exception& ex) {
   std::cout << "exception: " << ex.what() << std::endl;
 }

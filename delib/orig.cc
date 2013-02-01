@@ -31,8 +31,8 @@ void orig::write_ (data_width dw, address_t address, value_t value) {
   }
 }
 
-void orig::write_ (address_t address, void *matrix, address_t columns, address_t rows) {
-  DapiWriteMultipleBytes (handle_, address, columns, rows, (unsigned char*)matrix, rows * columns);
+void orig::write_ (address_t address, const matrix_t &matrix, address_t columns, address_t rows) {
+  DapiWriteMultipleBytes (handle_, address, columns, rows, (unsigned char*)(&matrix[0]), rows * columns);
 }
 
 delib::value_t orig::read_ (data_width dw, address_t address) { 
@@ -53,6 +53,6 @@ delib::value_t orig::read_ (data_width dw, address_t address) {
   return 0;
 }
 
-void orig::read_ (address_t address, void *matrix, address_t columns, address_t rows) {
-  DapiReadMultipleBytes (handle_, address, columns, rows, (unsigned char*)matrix, rows * columns);
+void orig::read_ (address_t address, matrix_t &matrix, address_t columns, address_t rows) {
+  DapiReadMultipleBytes (handle_, address, columns, rows, (unsigned char*)(&matrix[0]), rows * columns);
 }

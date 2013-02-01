@@ -56,13 +56,14 @@ delib::value_t ftdi_base::read_ (data_width dw, address_t address) {
 }
 
 
-void ftdi_base::write_ (address_t address, void *matrix, address_t columns, address_t rows) {
-  cmd_ (oc_send_block, address, reinterpret_cast<uint8_t *>(matrix), columns, rows);
+void ftdi_base::write_ (address_t address, const matrix_t &matrix, address_t columns, address_t rows) {
+  matrix_t tmp = matrix;
+  cmd_ (oc_send_block, address, tmp, columns, rows);
 }
 
 
-void ftdi_base::read_ (address_t address, void *matrix, address_t columns, address_t rows) {
-  cmd_ (oc_recv_block, address, reinterpret_cast<uint8_t *>(matrix), columns, rows);
+void ftdi_base::read_ (address_t address, matrix_t &matrix, address_t columns, address_t rows) {
+  cmd_ (oc_recv_block, address, matrix, columns, rows);
 }
 
 void ftdi_base::set_baudrate (int baudrate) {
@@ -121,7 +122,7 @@ delib::value_t ftdi_base::cmd_ (opcode cmd, address_t address, address_t modifie
 }
 
 
-void ftdi_base::cmd_ (opcode cmd, address_t address, uint8_t *matrix, address_t columns, address_t rows) {
+void ftdi_base::cmd_ (opcode cmd, address_t address, matrix_t &matrix, address_t columns, address_t rows) {
   uint8_t job_id = job_id_inc ();
 
   std::vector<uint8_t> payload(2 * (columns + 1) * rows + 20, 0);
@@ -137,7 +138,7 @@ void ftdi_base::cmd_ (opcode cmd, address_t address, uint8_t *matrix, address_t 
   address_t send_cnt = 20;
 
   if (cmd == oc_send_block) {
-    std::copy (matrix, matrix + columns * rows, payload.begin () + send_cnt);
+    std::copy (matrix.begin (), matrix.begin () + columns * rows, payload.begin () + send_cnt);
     send_cnt += columns * rows;
   }
 
@@ -164,7 +165,7 @@ void ftdi_base::cmd_ (opcode cmd, address_t address, uint8_t *matrix, address_t 
 
   for (address_t i = 0; i < rows && cmd == oc_recv_block; i++) {
     if (payload[i * (columns + 1) + 2] != (i & 0xff)) throw std::runtime_error ("malformed answer");
-    std::copy (payload.begin () + i * (columns + 1) + 3 , payload.begin () + (i + 1) * (columns + 1) + 3 - 1, matrix + i * columns);
+    std::copy (payload.begin () + i * (columns + 1) + 3 , payload.begin () + (i + 1) * (columns + 1) + 3 - 1, matrix.begin () + i * columns);
   }
 }
 

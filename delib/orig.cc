@@ -1,6 +1,8 @@
 #include <stdexcept>
 #include "orig.hh"
 
+using namespace delib;
+
 orig::orig (int id, int nr) { 
   handle_ = DapiOpenModule (id, nr); 
 

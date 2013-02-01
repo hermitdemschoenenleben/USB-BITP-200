@@ -4,11 +4,13 @@
 #include "ftdi_base.hh"
 #include <iostream>
 
-ftdi_base::ftdi_base (int id, int nr, link_type link) { 
+using namespace delib;
+
+ftdi_base::ftdi_base (delib::module_id id, int nr, link_type link) { 
   if (ftdi_init (&handle_) < 0) throw std::runtime_error ("ftdi_init failed");
 
   std::ostringstream serial;
-  serial << "DT00" << std::setw (4) << std::setfill ('0') << id;
+  serial << "DT00" << std::setw (4) << std::setfill ('0') << int(id);
 
   if (link == A) serial << "A";
   else if (link == B) ftdi_set_interface (&handle_, INTERFACE_B);

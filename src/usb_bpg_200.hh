@@ -13,8 +13,8 @@ class usb_bpg_200 {
     void stop ();
     void pc_mode ();
 
-    void write_ram (delib::matrix_t buff, size_t buffer_length);
-    void read_ram (delib::matrix_t buff, size_t buffer_length);
+    void write_ram (const delib::matrix_t &buff, size_t buffer_length);
+    void read_ram (delib::matrix_t &buff, size_t buffer_length);
     void memory_test (size_t memory_lines);
 
     void reset_counter ();

@@ -1,5 +1,5 @@
 #include <algorithm>
-#include <iostream>
+#include <sstream>
 #include "usb_bpg_200.hh"
 #if ORIG_PRESENT
 #include "orig.hh"
@@ -68,7 +68,7 @@ delib::value_t usb_bpg_200::ram_sm () { return 0xff & io_->read (delib::d4, 0xe9
 
 delib::value_t usb_bpg_200::counter () { return io_->read (delib::d4, 0xd8); }
 
-void usb_bpg_200::write_ram (delib::matrix_t buff, size_t buffer_length) {
+void usb_bpg_200::write_ram (const delib::matrix_t &buff, size_t buffer_length) {
   stop ();
 
   reset_counter ();
@@ -78,7 +78,7 @@ void usb_bpg_200::write_ram (delib::matrix_t buff, size_t buffer_length) {
 
 
 
-void usb_bpg_200::read_ram (delib::matrix_t buff, size_t buffer_length) {
+void usb_bpg_200::read_ram (delib::matrix_t &buff, size_t buffer_length) {
   reset_counter ();
 
   io_->read (delib::d4, 0x68);
@@ -105,6 +105,8 @@ void usb_bpg_200::memory_test (size_t memory_lines) {
 
   if (!std::equal (buff.begin (), buff.begin () + memory_lines * 5, buff2.begin ())) {
     auto x = std::mismatch (buff.begin (), buff.begin () + memory_lines * 5, buff2.begin ());
-    std::cout << "memory mismatch at position " << x.first - buff.begin () << " values " << int(*x.first) << "!=" << int(*x.second) << std::endl;
+    std::ostringstream m;
+    m << "memory mismatch at position " << x.first - buff.begin () << " values " << int(*x.first) << "!=" << int(*x.second);
+    throw std::runtime_error (m.str ());
   }
 }

@@ -40,7 +40,7 @@ delib::value_t ftdi_base::ping_ (value_t count) {
 void ftdi_base::write_ (data_width dw, address_t address, value_t value) { 
   address_t shift = address & (8 - int(dw));
   address_t modifier = ((1 << int(dw)) - 1) << shift;
-  value_t data = value << shift;
+  value_t data = value << (shift * 8);
   
   cmd_ (oc_send, address, modifier, data);
 }
@@ -52,7 +52,7 @@ delib::value_t ftdi_base::read_ (data_width dw, address_t address) {
   value_t data = cmd_ (oc_recv, address, modifier, 0);
 
   value_t mask = (value_t(1) << (int(dw) * 8)) - 1;
-  return (data >> shift) & mask;
+  return (data >> (8 * shift)) & mask;
 }
 
 

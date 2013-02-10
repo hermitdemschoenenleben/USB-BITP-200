@@ -8,7 +8,7 @@
 
 using namespace delib;
 
-usb_bpg_200::usb_bpg_200 (int nr): cfg_reg_(0) {
+usb_bpg_200::usb_bpg_200 (int nr): cfg_reg_(0), ram_end_(0) {
   //io_ = new orig (USB_BITP_200, nr);
   io_ = std::unique_ptr<base>(new ftdi_dual (USB_BITP_200, 0));
 }
@@ -27,6 +27,8 @@ void usb_bpg_200::flip_10_cfg_bit (int bit) {
   set_cfg_bit (bit);
   clear_cfg_bit (bit);
 }
+
+bool usb_bpg_200::check_cfg_bit (int bit) { return io_->read (delib::d4, 0) & (1 << bit); }
 
 
 delib::value_t usb_bpg_200::ping (delib::value_t count) { return io_->ping (count); }
@@ -48,25 +50,41 @@ void usb_bpg_200::counter (delib::value_t nr) {
 }
 
 void usb_bpg_200::clock_divider (delib::value_t nr) {
-  if (!nr) set_cfg_bit (4);
-  else {
+  if (!nr) {
+    set_cfg_bit (4);
+    if (ram_end_) ram_end (ram_end_);
+  } else {
     clear_cfg_bit (4);
     io_->write (delib::d4, 0x1C, nr << 1);
   }
 }  
 
-void usb_bpg_200::mapping (delib::address_t start, delib::address_t stop) {
-  io_->write (delib::d4, 0x10, start >> 1);
-  io_->write (delib::d4, 0x14, stop >> 1); // + 1 ?
+void usb_bpg_200::ram_begin (delib::address_t begin) {
+  io_->write (delib::d4, 0x10, begin >> 1);
 }
+
+void usb_bpg_200::ram_end (delib::address_t end) {
+  ram_end_ = end;
+  if (!clock_divider ()) end += 2;
+  io_->write (delib::d4, 0x14, end >> 1);
+}
+
+delib::value_t usb_bpg_200::counter () { return check_cfg_bit (3) ? 0 : io_->read (delib::d4, 0x18); }
+
+delib::value_t usb_bpg_200::clock_divider () { return check_cfg_bit (4) ? 0 : io_->read (delib::d4, 0x1C) >> 1; }
+
+delib::address_t usb_bpg_200::ram_begin () { return io_->read (delib::d4, 0x10) << 1; }
+
+delib::address_t usb_bpg_200::ram_end () { return (io_->read (delib::d4, 0x14) << 1) + (clock_divider () ? 0 : -2); }
 
 delib::value_t usb_bpg_200::status () { return 0xf & io_->read (delib::d4, 0xe8); }
 
-delib::value_t usb_bpg_200::address () { return 0xf0 & io_->read (delib::d4, 0xf0); }
+delib::address_t usb_bpg_200::address () { return 0xf0 & io_->read (delib::d4, 0xf0); }
 
 delib::value_t usb_bpg_200::ram_sm () { return 0xff & io_->read (delib::d4, 0xe9); }
 
-delib::value_t usb_bpg_200::counter () { return io_->read (delib::d4, 0xd8); }
+delib::value_t usb_bpg_200::counter2 () { return io_->read (delib::d4, 0xd8); }
+
 
 void usb_bpg_200::write_ram (const delib::matrix_t &buff, size_t buffer_length) {
   stop ();
@@ -88,9 +106,6 @@ void usb_bpg_200::read_ram (delib::matrix_t &buff, size_t buffer_length) {
 
 void usb_bpg_200::memory_test (size_t memory_lines) {
   stop ();
-    // 512*1024 = Speicher vom USB-BITP-200
-    //ULONG memory_lines = 8*1024;		// Muss geradzahlig sein !!!!!!!!!!!!
-
   matrix_t buff(memory_lines * 5);
   matrix_t buff2(memory_lines * 5);
 

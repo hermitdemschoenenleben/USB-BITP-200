@@ -19,18 +19,27 @@ class usb_bpg_200 {
 
     void reset_counter ();
     void counter (delib::value_t nr);
-    void clock_divider (delib::value_t nr);
-    void mapping (delib::address_t start, delib::address_t stop);
+    void clock_divider (delib::value_t nr);	// T[ns] = (3 + clock_divider) * 2 * 6,6 ns
+    void ram_begin (delib::address_t begin);
+    void ram_end (delib::address_t end);
 
-    delib::value_t status ();
-    delib::value_t address ();
-    delib::value_t ram_sm ();
     delib::value_t counter ();
+    delib::value_t clock_divider ();
+    delib::address_t ram_begin ();
+    delib::address_t ram_end ();
+    
+    delib::address_t address ();
+    delib::value_t status ();
+    delib::value_t ram_sm ();
+    delib::value_t counter2 ();
 
   private:
     void set_cfg_bit (int bit);
     void clear_cfg_bit (int bit);
     void flip_10_cfg_bit (int bit);
+    bool check_cfg_bit (int bit);
+
+    delib::address_t ram_end_;
 
     delib::value_t cfg_reg_;
     std::unique_ptr<delib::base> io_;

@@ -14,19 +14,25 @@ int main() try {
 
 
   std::cout << "Write pattern" << std::endl;
-  int memory_lines = 100;
-  delib::matrix_t buff(memory_lines * 5);
+  int memory_lines = 50;
+  delib::matrix_t buff(memory_lines * 5, 0);
 
-  for (int i = 0; i < memory_lines; i++)
-    for (int j = 0; j < 5; j++) buff[i * 5 + j] = (i & 0xff) + j;
+  uint8_t bits = 0xff;
+  for (int i = 0; i < memory_lines; i++) {
+    for (int j = 0; j < 5; j++) buff[memory_lines * 5 - 1 - i * 5 + j] = buff[i * 5 + j] = bits;
+    bits &= bits - 1;
+    if (!bits) break;
+  }
 
   bpg.write_ram (buff, memory_lines * 5);
 
   std::cout << "Configuring" << std::endl;
   bpg.stop ();
-  bpg.counter (10);
-  bpg.mapping (2, 22);
+  bpg.counter (0);
+  bpg.ram_begin (0);
+  bpg.ram_end (memory_lines);
   bpg.clock_divider (76);
+  std::cout << "running " << bpg.counter () << " loops from " << bpg.ram_begin () << " to " << bpg.ram_end () << " with divider set to " << bpg.clock_divider () << std::endl;
 
 
   std::cout << "Start" << std::endl;

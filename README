@@ -1,0 +1,8 @@
+Library to use the USB BPG 200 pattern generator from Deditec, 
+http://www.deditec.de/en/entwicklungstools/prod/bit-pattern-generator-36.html
+
+The project is based on original Deditec Delib distributed with a private
+licence: the code has been entirelly rewritten in C++ with a much cleaner
+structure and algorithms.
+
+The project is released with GPL licence.

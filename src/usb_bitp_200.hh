@@ -1,11 +1,11 @@
-#ifndef USB_BPG_200_H_
-#define USB_BPG_200_H_
+#ifndef USB_BITP_200_H_
+#define USB_BITP_200_H_
 #include <memory>
 #include "delib.hh"
 
-class usb_bpg_200 {
+class usb_bitp_200 {
   public:
-    usb_bpg_200 (int device_nr);
+    usb_bitp_200 (int device_nr);
 
     delib::value_t ping (delib::value_t count);
 

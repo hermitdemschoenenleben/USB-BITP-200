@@ -3,8 +3,8 @@ AUTOMAKE_OPTIONS = subdir-objects
 AM_CPPFLAGS = $(DEPS_CFLAGS) -I@top_srcdir@/delib
 AM_CXXFLAGS = -std=c++11
 
-lib_LTLIBRARIES = src/libusb_bpg_200-@PACKAGE_VERSION@.la delib/libdelib-@PACKAGE_VERSION@.la 
-src_libusb_bpg_200_@PACKAGE_VERSION@_la_SOURCES = src/usb_bpg_200.cc
+lib_LTLIBRARIES = src/libusb_bitp_200-@PACKAGE_VERSION@.la delib/libdelib-@PACKAGE_VERSION@.la 
+src_libusb_bitp_200_@PACKAGE_VERSION@_la_SOURCES = src/usb_bitp_200.cc
 delib_libdelib_@PACKAGE_VERSION@_la_SOURCES = delib/delib.cc delib/ftdi_base.cc
 
 if DELIB_ORIG
@@ -12,8 +12,8 @@ delib_libdelib_@PACKAGE_VERSION@_la_SOURCES += delib/orig.cc delib/orig_delib/de
 AM_CPPFLAGS += -DORIG_PRESENT
 endif
 
-bin_PROGRAMS = usb_bpg_200_demo
-usb_bpg_200_demo_SOURCES = src/usb_bpg_200_demo.cc
-usb_bpg_200_demo_LDADD = src/libusb_bpg_200-@PACKAGE_VERSION@.la delib/libdelib-@PACKAGE_VERSION@.la $(DEPS_LIBS)
+bin_PROGRAMS = usb_bitp_200_demo
+usb_bitp_200_demo_SOURCES = src/usb_bitp_200_demo.cc
+usb_bitp_200_demo_LDADD = src/libusb_bitp_200-@PACKAGE_VERSION@.la delib/libdelib-@PACKAGE_VERSION@.la $(DEPS_LIBS)
 
 dist_noinst_SCRIPTS = autogen.sh

@@ -1,16 +1,16 @@
 #include <stdexcept>
 #include <iostream>
-#include "usb_bpg_200.hh"
+#include "usb_bitp_200.hh"
 
 int main() try {
-  usb_bpg_200 bpg(0);
+  usb_bitp_200 bitp(0);
 
   std::cout << "PING" << std::endl;
-  for (delib::value_t i = 0; i < 100; i++) std::cout << ((bpg.ping (i) == i) ? "." : "E");
+  for (delib::value_t i = 0; i < 100; i++) std::cout << ((bitp.ping (i) == i) ? "." : "E");
   std::cout << std::endl;
 
   std::cout << "Memory test" << std::endl;
-  bpg.memory_test (1024);
+  bitp.memory_test (1024);
 
 
   std::cout << "Write pattern" << std::endl;
@@ -24,22 +24,22 @@ int main() try {
     if (!bits) break;
   }
 
-  bpg.write_ram (buff, memory_lines * 5);
+  bitp.write_ram (buff, memory_lines * 5);
 
   std::cout << "Configuring" << std::endl;
-  bpg.stop ();
-  bpg.counter (0);
-  bpg.ram_begin (0);
-  bpg.ram_end (memory_lines);
-  bpg.clock_divider (76);
-  std::cout << "running " << bpg.counter () << " loops from " << bpg.ram_begin () << " to " << bpg.ram_end () << " with divider set to " << bpg.clock_divider () << std::endl;
+  bitp.stop ();
+  bitp.counter (0);
+  bitp.ram_begin (0);
+  bitp.ram_end (memory_lines);
+  bitp.clock_divider (76);
+  std::cout << "running " << bitp.counter () << " loops from " << bitp.ram_begin () << " to " << bitp.ram_end () << " with divider set to " << bitp.clock_divider () << std::endl;
 
 
   std::cout << "Start" << std::endl;
-  bpg.start ();
+  bitp.start ();
   
 
-  std::cout << "Status: " << bpg.status () << std::endl;
+  std::cout << "Status: " << bitp.status () << std::endl;
 } catch (std::exception& ex) {
   std::cout << "exception: " << ex.what() << std::endl;
 }

@@ -3,7 +3,7 @@ AC_PREREQ([2.59])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([1.10 -Wall no-define silent-rules])
 LT_INIT
-PKG_CHECK_MODULES([DEPS], [libftdi >= 0.20])
+PKG_CHECK_MODULES([DEPS], [libftdi1 >= 0.20])
 AC_CONFIG_HEADERS([config.h])
 AC_PROG_CC
 AC_PROG_CXX
